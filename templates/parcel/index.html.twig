@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parcel index{% endblock %}
+
+{% block body %}
+    <h1>Parcel index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>PickUp</th>
+                <th>DropOff</th>
+                <th>Status</th>
+                <th>PickedAt</th>
+                <th>DeliveredAt</th>
+{#                {% if is_granted('ROLE_SENDER') %}#}
+                    <th>actions</th>
+{#                {% endif %}#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for parcel in parcels %}
+            <tr>
+                <td>{{ parcel.description }}</td>
+                <td>{{ parcel.pickUp }}</td>
+                <td>{{ parcel.dropOff }}</td>
+                <td>{{ parcel.status }}</td>
+                <td>{{ parcel.pickedAt ? parcel.pickedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ parcel.deliveredAt ? parcel.deliveredAt|date('Y-m-d H:i:s') : '' }}</td>
+                {% if is_granted('ROLE_SENDER') %}
+                    <td>
+                        <a href="{{ path('app_parcel_show', {'id': parcel.id}) }}">show</a>
+                        <a href="{{ path('app_parcel_edit', {'id': parcel.id}) }}">edit</a>
+                    </td>
+                {% endif %}
+                {% if is_granted('ROLE_BICKER') %}
+                    <td>
+                        <a href="{{ path('app_parcel_pick', {'id': parcel.id}) }}">Pick</a>
+                        <a href="{{ path('app_parcel_deliver', {'id': parcel.id}) }}">Deliver</a>
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_granted('ROLE_SENDER') %}
+        <a href="{{ path('app_parcel_new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parcel{% endblock %}
+
+{% block body %}
+    <h1>Parcel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ parcel.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ parcel.description }}</td>
+            </tr>
+            <tr>
+                <th>PickUp</th>
+                <td>{{ parcel.pickUp }}</td>
+            </tr>
+            <tr>
+                <th>DropOff</th>
+                <td>{{ parcel.dropOff }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ parcel.status }}</td>
+            </tr>
+            <tr>
+                <th>PickedAt</th>
+                <td>{{ parcel.pickedAt ? parcel.pickedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DeliveredAt</th>
+                <td>{{ parcel.deliveredAt ? parcel.deliveredAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_parcel_index') }}">back to list</a>
+
+    <a href="{{ path('app_parcel_edit', {'id': parcel.id}) }}">edit</a>
+
+    {{ include('parcel/_delete_form.html.twig') }}
+{% endblock %}

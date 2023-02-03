@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParcelRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,7 +37,7 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    private $status = 'pending';
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -48,15 +50,14 @@ class Parcel
     private $deliveredAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Sender::class, inversedBy="parcels")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="parcels")
      */
-    private $sender;
+    private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Biker::class, inversedBy="parcels")
-     */
-    private $biker;
+    public function __construct()
+    {
+        $this->user = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,26 +136,26 @@ class Parcel
         return $this;
     }
 
-    public function getSender(): ?Sender
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
     {
-        return $this->sender;
+        return $this->user;
     }
 
-    public function setSender(?Sender $sender): self
+    public function addUser(User $user): self
     {
-        $this->sender = $sender;
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+        }
 
         return $this;
     }
 
-    public function getBiker(): ?Biker
+    public function removeUser(User $user): self
     {
-        return $this->biker;
-    }
-
-    public function setBikerId(?Biker $biker): self
-    {
-        $this->biker = $biker;
+        $this->user->removeElement($user);
 
         return $this;
     }
